@@ -1,9 +1,5 @@
 #!/bin/bash
 
-disk=""
-path=""
-file=""
-
 lsblk
 
 while true; do
