@@ -6,7 +6,7 @@ while true; do
 
 	read -p "Enter the USB disk (example: /dev/sdc):" disk
 
-	if [ ! -b disk ]; then
+	if [ ! -b $disk ]; then
 		echo "Invalid disk."
 		continue
 	fi
@@ -26,7 +26,7 @@ while true; do
 
 	read -p "Enter the folder path containing the .bin file: " path	
 
-	if [ -e path ]; then
+	if [ -e $path ]; then
 		cd $path || exit 1
 		break
 	else
@@ -35,15 +35,6 @@ while true; do
 done
 
 cd $path
-
-while true; do
-	if [ -f file ]; then
-		echo "creating image..."
-		break
-	else
-		read -p "Enter a valid .bin file:" file
-	fi
-done
 
 while true; do
 
@@ -55,8 +46,10 @@ while true; do
 		break
 	else
 		echo "Enter a valid .bin."
+	fi
 done
 
-sudo dd if=file of=$disk bs=4M status=progress conv=fsync
+sudo dd if=$file of=$disk bs=4M status=progress conv=fsync
 sync
 echo "Your recovery USB is ready."
+
