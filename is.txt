@@ -4,52 +4,52 @@ lsblk
 
 while true; do
 
-	read -p "Enter the USB disk (example: /dev/sdc):" disk
+	read -e -i "$disk" -p "Enter the USB disk (example: /dev/sdc): " disk
 
-	if [ ! -b $disk ]; then
+	if [ -z $disk ] || [ ! -b $disk ]; then
 		echo "Invalid disk."
 		continue
+	fi
+	
+	read -p "WARNING: This will erase everything on $disk. Type YES to continue: " confirm
+
+	if [ -z $confirm ] || [ $confirm != "YES" ]; then
+        	continue
 	fi
 
 	break
 done
 
-read -p "WARNING: This will erase everything on $disk. Type YES to continue: " confirm
-if [ $confirm != "YES" ]; then
-	echo "Aborted."
-	exit 1
-fi
-
 sudo umount {$disk}* 2>/dev/null
 
 while true; do
 
-	read -p "Enter the folder path containing the .bin file: " path	
+	read -e -i "$path" -p "Enter the folder path containing the .bin file: " path	
 
-	if [ -e $path ]; then
-		cd $path || exit 1
-		break
-	else
+	if [ -z $path ] || [ ! -e $path ]; then
+
 		echo "Enter a valid path."
+		continue
+	else
+		cd $path
+		break
 	fi
 done
 
-cd $path
-
 while true; do
 
-	read -p "Enter the .bin file name: " file
+	read -e -i "$file" -p "Enter the .bin file name: " file
 
-	if [ -f $file ]; then
+	if [ -z $file ] || [ ! -f $file ]; then
 
+		echo "Enter a valid .bin."
+		continue
+	else
 		echo "creating image..."
 		break
-	else
-		echo "Enter a valid .bin."
 	fi
 done
 
 sudo dd if=$file of=$disk bs=4M status=progress conv=fsync
-sync
 echo "Your recovery USB is ready."
 
