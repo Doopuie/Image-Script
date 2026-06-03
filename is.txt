@@ -1,6 +1,6 @@
 #!/bin/bash
 
-lsblk
+lsblk -d -o NAME,SIZE,MODEL,TRAN | grep usb
 
 while true; do
 
