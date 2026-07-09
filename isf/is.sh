@@ -1,8 +1,8 @@
 #!/bin/bash
 
-lsblk -d -o NAME,SIZE,MODEL,TRAN | grep usb
+lsblk -d -o NAME,SIZE,MODEL,TRAN | grep usb # lists only usb disks, -d omits slaves or holders, -o outputs in columns
 
-while true; do
+while true; do # asks for name of disk and warns that the script will erase everything
 
 	read -e -i "$disk" -p "Enter the USB disk (example: /dev/sdc): " disk
 
@@ -21,9 +21,9 @@ while true; do
 	break
 done
 
-sudo umount $disk* 2>/dev/null
+sudo umount $disk* 2>/dev/null # unmounts selected disk to prevent corruption
 
-while true; do
+while true; do # asks for path to recovery file
 
 	read -e -i "$path" -p "Enter the folder path containing the .bin file: " path	
 
@@ -37,7 +37,7 @@ while true; do
 	fi
 done
 
-while true; do
+while true; do # asks for the name of the bin file
 
 	read -e -i "$file" -p "Enter the .bin file name: " file
 
@@ -51,6 +51,6 @@ while true; do
 	fi
 done
 
-sudo dd if=$file of=$disk bs=4M status=progress conv=fsync
+sudo dd if=$file of=$disk bs=4M status=progress conv=fsync # pulls user provided information and writes to usb
 echo "Your recovery USB is ready."
 

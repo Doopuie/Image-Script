@@ -1,0 +1,70 @@
+def getwindowsdisks(): # function that returns disk info
+
+        result = subprocess.run( # runs powershell commands to pull disk info and stores the output in "result"
+                [
+                        "powershell",
+                        "-Command",
+                        "Get-Disk | Select-Object Number,FriendlyName,Size,BusType | ConvertTo-Json"
+                ],
+                capture_output=True,
+                text=True
+                check=True
+        )
+
+        data = json.loads(result.stdout)
+
+        return data
+
+
+
+        disks = getwindowsdisks() # pulls info from "getwindowsdisks()" and stores it in "disks"
+
+        for i, disk in enumerate(disks, start=1): # enumerates "disks" starting at 1 and lists disk info in columns
+
+                if disk["BusType"] == "USB":
+
+                        print(
+                                f"Disk {disk['Number']} - "
+                                f"{disk['FriendlyName']} - "
+                                f"{disk['Size']} - "
+                                f"{disk['BusType']}"
+                        )
+
+        diskNum = int(input("Select the USB disk number to image: "))
+
+        while True: # asks user to pick a disk number and warns them that all of its contents will be erased 
+
+                if 1 <= diskNum <= len(disks):
+
+                        confirm = input(f"WARNING: This will erase everything on Disk {choice}. Type YES to continue: ")
+
+                        if confirm == "YES":
+                                break
+                        else:
+                                continue
+
+                else: print("Please enter a valid number")
+
+        subprocess.run( # unmounts selected disk to avoid corruption
+                [
+                        "powershell",
+                        "-Command",
+                        f"Set-Disk -Number {diskNum} -IsOffline $true"
+                ],
+                check=True
+        )
+
+        recPath = input("Enter the folder path containing the .bin file: ")
+
+        while True:
+
+                if not os.path.exists(recPath):
+
+                        print("the specified path does not exists")     
+                        continue
+                else:
+                        subprocess.run(
+                                "powershell",
+                                "-Command",
+                                f"cd {recPath}"
+                        )
