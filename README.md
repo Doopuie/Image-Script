@@ -1,6 +1,4 @@
 A collection of simple scripts for making ChromeOS images using a CLI.
 
-"is.txt" is strictly shell and can only be used on linux.
-
-"isu.py" is coded in python and will be compatible with Windows and Linux.
+"is.sh" is strictly shell and can only be used on linux.
 
