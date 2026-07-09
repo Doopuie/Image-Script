@@ -1,4 +1,4 @@
-A collection of simple scripts for making ChromeOS images using a CLI.
+A script to automate cros image creation
 
 "is.sh" is strictly shell and can only be used on linux.
 
